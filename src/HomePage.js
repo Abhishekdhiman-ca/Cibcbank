@@ -1,13 +1,11 @@
+// HomePage.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CIBC from './cibc-0224-ph-2-transformed.webp';
-import Content from './R.jpeg';
-import People from './cq5dam.web.1280.1280-transformed.webp';
-import { Container, Row, Col, Card, Carousel, Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookF, faTwitter, faGoogle, faInstagram, faLinkedinIn, faGithub } from '@fortawesome/free-brands-svg-icons';
+import Content from './CIBC-1-1400x640-transformed.jpeg';
+import { Container, Row, Col, Form, Card, Carousel, Button } from 'react-bootstrap';
 
 const HomePage = ({ balances, transactions }) => {
   const [hoveredBalance, setHoveredBalance] = useState(null);
@@ -32,18 +30,16 @@ const HomePage = ({ balances, transactions }) => {
             alt="Welcome to CIBC Bank"
             style={{ objectFit: "cover", maxHeight: "600px" }}
           />
-          <Carousel.Caption>
-          </Carousel.Caption>
+          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item style={{ maxHeight: "400px" }}>
           <img
             className="d-block w-100"
-            src={People}
-            alt="Transaction History"
-            style={{ objectFit: "cover", maxHeight: "100%" }}
+            src={CIBC}
+            alt="Welcome to CIBC Bank"
+            style={{ objectFit: "cover", maxHeight: "600px" }}
           />
-          <Carousel.Caption>
-          </Carousel.Caption>
+          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
       </Carousel>
 
@@ -66,7 +62,7 @@ const HomePage = ({ balances, transactions }) => {
                 <h5 className="card-title">Checking Balance</h5>
                 <p className="card-text">${balances.checking.toFixed(2)}</p>
                 {hoveredBalance === 'checking' && (
-                  <Button variant="danger" className="mt-2" onClick={() => handleClick('checking')}>View Chequing Transactions</Button>
+                  <Button variant="danger" className="mt-2" onClick={() => handleClick('checking')}>View Checking Transactions</Button>
                 )}
               </Card.Body>
             </Card>
@@ -136,90 +132,29 @@ const HomePage = ({ balances, transactions }) => {
         </Container>
       )}
 
-      <Container className="my-5">
-        <Row>
-          <Col md={4} className="offset-md-1 d-flex"> {/* Added offset-md-1 for equal spacing */}
-            <Card className="p-4 bg-light shadow rounded d-flex flex-column justify-content-between">
-              <div>
-                <h2>About CIBC Bank</h2>
-                <p>Here you can provide information about CIBC Bank.</p>
-                <h3>Our Services</h3>
-                <p>Here you can list the services provided by CIBC Bank.</p>
-              </div>
-              <div className="d-grid gap-2">
-                <Link to="/deposit" className="btn btn-danger btn-lg">Deposit</Link>
-                <Link to="/withdraw" className="btn btn-danger btn-lg">Withdraw</Link>
-              </div>
-            </Card>
-          </Col>
-          <Col md={7}>
-            <img src={Content} alt="Welcome to CIBC Bank" className="img-fluid rounded" />
-          </Col>
-        </Row>
-      </Container>
+<Container className="my-5">
+  <Row className="d-flex align-items-stretch">
+    <Col md={4} className="offset-md-1">
+      <Card className="p-4 bg-light shadow rounded d-flex flex-column justify-content-between h-100">
+        <div>
+          <h2>About CIBC Bank</h2>
+          <p>Here you can provide information about CIBC Bank.</p>
+          <h3>Our Services</h3>
+          <p>Here you can list the services provided by CIBC Bank.</p>
+        </div>
+        <div className="d-grid gap-2">
+          <Link to="/deposit" className="btn btn-danger btn-lg">Deposit</Link>
+          <Link to="/withdraw" className="btn btn-danger btn-lg">Withdraw</Link>
+          <Link to="/etransfer" className="btn btn-danger btn-lg">E-Transfer</Link>
+        </div>
+      </Card>
+    </Col>
+    <Col md={7}>
+      <img src={Content} alt="Welcome to CIBC Bank" className="img-fluid rounded h-100" />
+    </Col>
+  </Row>
+</Container>
 
-
-      <footer className="bg-dark text-white py-4 text-center">
-        <Container>
-          <section className='mb-4'>
-            <Button
-              variant='primary'
-              className='m-1'
-              href='#!'
-              role='button'
-            >
-              <FontAwesomeIcon icon={faFacebookF} />
-            </Button>
-
-            <Button
-              variant='info'
-              className='m-1'
-              href='#!'
-              role='button'
-            >
-              <FontAwesomeIcon icon={faTwitter} />
-            </Button>
-
-            <Button
-              variant='danger'
-              className='m-1'
-              href='#!'
-              role='button'
-            >
-              <FontAwesomeIcon icon={faGoogle} />
-            </Button>
-
-            <Button
-              variant='primary'
-              className='m-1'
-              href='#!'
-              role='button'
-            >
-              <FontAwesomeIcon icon={faInstagram} />
-            </Button>
-
-            <Button
-              variant='primary'
-              className='m-1'
-              href='#!'
-              role='button'
-            >
-              <FontAwesomeIcon icon={faLinkedinIn} />
-            </Button>
-
-            <Button
-              variant='secondary'
-              className='m-1'
-              href='#!'
-              role='button'
-            >
-              <FontAwesomeIcon icon={faGithub} />
-            </Button>
-
-          </section>
-          <p>&copy; <span style={{ color: 'red', fontWeight: 'bold', animation: 'bounce-in-right 1s' }}> CIBC</span> Bank {new Date().getFullYear()}</p>
-        </Container>
-      </footer>
     </div>
   );
 };

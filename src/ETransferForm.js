@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const contacts = ['John Doe', 'Jane Smith', 'Mike Johnson']; 
-
-const TransactionForm = ({ type, onSubmit }) => {
-  const [accountNumber, setAccountNumber] = useState('');
+const ETransferForm = ({ contacts, onSubmit }) => {
+  const [fromAccount, setFromAccount] = useState('checking');
+  const [toContact, setToContact] = useState('');
   const [amount, setAmount] = useState('');
-  const [accountType, setAccountType] = useState('checking');
-  const [selectedContact, setSelectedContact] = useState(contacts[0]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
@@ -18,15 +15,15 @@ const TransactionForm = ({ type, onSubmit }) => {
   };
 
   const handleConfirm = () => {
-    const transactionData = {
-      accountNumber: accountNumber.trim(),
+    const transferData = {
+      fromAccount,
+      toContact,
       amount: parseFloat(amount.trim()),
-      type: type,
-      accountType: accountType,
-      contact: selectedContact,
+      type: 'etransfer',
     };
-    onSubmit(transactionData);
-    setAccountNumber('');
+    onSubmit(transferData);
+    setFromAccount('checking');
+    setToContact('');
     setAmount('');
     navigate('/');
     setShowModal(false);
@@ -40,19 +37,52 @@ const TransactionForm = ({ type, onSubmit }) => {
             <span className="text-danger">CIBC</span> Bank
           </h1>
           <h5 className="fw-normal my-4 pb-3 text-center" style={{ letterSpacing: '1px' }}>
-            {type === 'deposit' ? 'Deposit' : type === 'withdraw' ? 'Withdraw' : 'E-Transfer'} Funds
+            E-Transfer Funds
           </h5>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="accountNumber" className="form-label">Account Number</label>
-              <input
-                type="text"
-                id="accountNumber"
+              <label className="form-label">From Account</label>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  id="checking"
+                  value="checking"
+                  checked={fromAccount === 'checking'}
+                  onChange={() => setFromAccount('checking')}
+                />
+                <label className="form-check-label" htmlFor="checking">
+                  Checking
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  id="savings"
+                  value="savings"
+                  checked={fromAccount === 'savings'}
+                  onChange={() => setFromAccount('savings')}
+                />
+                <label className="form-check-label" htmlFor="savings">
+                  Savings
+                </label>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="toContact" className="form-label">To Contact</label>
+              <select
+                id="toContact"
                 className="form-control form-control-lg"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
+                value={toContact}
+                onChange={(e) => setToContact(e.target.value)}
                 required
-              />
+              >
+                <option value="" disabled>Select contact</option>
+                {contacts.map((contact, index) => (
+                  <option key={index} value={contact}>{contact}</option>
+                ))}
+              </select>
             </div>
             <div className="mb-4">
               <label htmlFor="amount" className="form-label">Amount</label>
@@ -65,56 +95,9 @@ const TransactionForm = ({ type, onSubmit }) => {
                 required
               />
             </div>
-            <div className="mb-4">
-              <label className="form-label">Account Type</label>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  id="checking"
-                  value="checking"
-                  checked={accountType === 'checking'}
-                  onChange={() => setAccountType('checking')}
-                />
-                <label className="form-check-label" htmlFor="checking">
-                  Checking
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  id="savings"
-                  value="savings"
-                  checked={accountType === 'savings'}
-                  onChange={() => setAccountType('savings')}
-                />
-                <label className="form-check-label" htmlFor="savings">
-                  Savings
-                </label>
-              </div>
-            </div>
-            {type === 'etransfer' && (
-              <div className="mb-4">
-                <label htmlFor="contact" className="form-label">Select Contact</label>
-                <select
-                  id="contact"
-                  className="form-control form-control-lg"
-                  value={selectedContact}
-                  onChange={(e) => setSelectedContact(e.target.value)}
-                  required
-                >
-                  {contacts.map((contact, index) => (
-                    <option key={index} value={contact}>
-                      {contact}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
             <div className="text-center">
               <button type="submit" className="btn btn-dark btn-lg mb-4 px-5">
-                {type === 'deposit' ? 'Deposit' : type === 'withdraw' ? 'Withdraw' : 'Transfer'}
+                Transfer
               </button>
             </div>
           </form>
@@ -129,11 +112,11 @@ const TransactionForm = ({ type, onSubmit }) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Transaction</h5>
+              <h5 className="modal-title">Confirm Transfer</h5>
               <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
-              <p>Are you sure you want to {type === 'deposit' ? 'deposit' : type === 'withdraw' ? 'withdraw' : 'transfer'} funds?</p>
+              <p>Are you sure you want to transfer funds?</p>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
@@ -146,4 +129,4 @@ const TransactionForm = ({ type, onSubmit }) => {
   );
 };
 
-export default TransactionForm;
+export default ETransferForm;
