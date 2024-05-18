@@ -31,7 +31,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
 
   return (
     <div className="container d-flex justify-content-center my-5">
-      <div className="card w-50">
+      <div className="card w-50" style={{ backgroundColor: '#212529', color: 'white' }}>
         <div className="card-body">
           <h1 className="fw-bold mb-0 text-center">
             <span className="text-danger">CIBC</span> Bank
@@ -41,7 +41,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
           </h5>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="form-label">From Account</label>
+              <label className="form-label" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 500 }}>From Account</label>
               <div className="form-check">
                 <input
                   className="form-check-input"
@@ -70,7 +70,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="toContact" className="form-label">To Contact</label>
+              <label htmlFor="toContact" className="form-label" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 500 }}>To Contact</label>
               <select
                 id="toContact"
                 className="form-control form-control-lg"
@@ -85,7 +85,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="amount" className="form-label">Amount</label>
+              <label htmlFor="amount" className="form-label" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 500 }}>Amount</label>
               <input
                 type="number"
                 id="amount"
@@ -96,15 +96,16 @@ const ETransferForm = ({ contacts, onSubmit }) => {
               />
             </div>
             <div className="text-center">
-              <button type="submit" className="btn btn-dark btn-lg mb-4 px-5">
+              <button type="submit" className="btn btn-danger btn-lg mb-4 px-5">
                 Transfer
               </button>
             </div>
           </form>
-          <div className="d-flex flex-row justify-content-center">
-            <a href="#!" className="small text-muted me-1">Terms of use.</a>
-            <a href="#!" className="small text-muted">Privacy policy</a>
+          <div className="d-flex flex-row justify-content-center" style={{ color: 'white' }}>
+            <a href="#!" className="small me-1" style={{ color: 'white' }}>Terms of use.</a>
+            <a href="#!" className="small" style={{ color: 'white' }}>Privacy policy</a>
           </div>
+
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import bankLogo from './CIBC_logo_2021.svg';
+import bankLogo from './Img/CIBC_logo_2021.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = () => {

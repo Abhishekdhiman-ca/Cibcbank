@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CIBC from './cibc-0224-ph-2-transformed.webp';
-import Content from './CIBC-1-1400x640-transformed.jpeg';
-import { Container, Row, Col, Form, Card, Carousel, Button } from 'react-bootstrap';
+import CIBC from './Img/CIBC-1-1400x640-transformed.jpeg';
+import Content from './Img/cibc-0224-ph-2-transformed.webp';
+import { Container, Row, Col, Card, Carousel, Button } from 'react-bootstrap';
 
 const HomePage = ({ balances, transactions }) => {
   const [hoveredBalance, setHoveredBalance] = useState(null);
@@ -23,7 +23,7 @@ const HomePage = ({ balances, transactions }) => {
   return (
     <div>
       <Carousel>
-        <Carousel.Item style={{ maxHeight: "400px" }}>
+        <Carousel.Item style={{ maxHeight: "450px" }}>
           <img
             className="d-block w-100"
             src={CIBC}
@@ -32,7 +32,7 @@ const HomePage = ({ balances, transactions }) => {
           />
           <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
-        <Carousel.Item style={{ maxHeight: "400px" }}>
+        <Carousel.Item style={{ maxHeight: "450px" }}>
           <img
             className="d-block w-100"
             src={CIBC}

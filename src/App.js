@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const App = () => {
   const [balances, setBalances] = useState({ checking: 128, savings: 1322 });
   const [transactions, setTransactions] = useState([]);
-  const contacts = ['John Doe', 'Jane Smith', 'Alice Johnson'];
+  const contacts = ['Abhishek Dhiman', 'Sukhjeet Singh', 'Arpan Silwal','Nawaz Chowdhry', 'Surjeet Singh', 'Sejal Josan','Nabdeep Kaur', 'Jasdeep Kaur', 'Riya Mankotia'];
 
   const handleTransaction = ({ accountNumber, amount, type, accountType }) => {
     const transaction = {
