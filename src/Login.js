@@ -6,22 +6,31 @@ import A from './Img/img1.webp';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Placeholder for login logic
+    // Define the hardcoded credentials
+    const validUsername = 'Abhibank@gmail.com';
+    const validPassword = 'password123';
+
     try {
       // Simulating login process with a delay
-      // Replace this with your actual login logic (e.g., API call)
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // If login is successful, navigate to home page
-      navigate('/');
+      // Check if the credentials match
+      if (username === validUsername && password === validPassword) {
+        // If login is successful, navigate to home page
+        navigate('/');
+      } else {
+        // If login fails, set error message
+        setError('Invalid username or password');
+      }
     } catch (error) {
       console.error('Login failed:', error.message);
-      // Handle login failure (e.g., show error message)
+      setError('An error occurred during login');
     }
   };
 
@@ -70,6 +79,7 @@ const Login = () => {
                     required 
                   />
                 </div>
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <button 
                   type="submit" 
                   className="btn btn-dark btn-lg mb-4 px-5"

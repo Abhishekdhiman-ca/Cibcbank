@@ -1,37 +1,44 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookF, faTwitter, faGoogle, faInstagram, faLinkedinIn, faGithub } from '@fortawesome/free-brands-svg-icons';
+import {
+  faFacebookF,
+  faTwitter,
+  faGoogle,
+  faInstagram,
+  faLinkedinIn,
+  faGithub
+} from '@fortawesome/free-brands-svg-icons';
 
 const SocialMediaLinks = ({ size }) => (
   <>
     <li className="ms-3">
-      <a className="link-light" href="#">
+      <a className="link-light" href="#" aria-label="Twitter">
         <FontAwesomeIcon icon={faTwitter} size={size} />
       </a>
     </li>
     <li className="ms-3">
-      <a className="link-light" href="#">
+      <a className="link-light" href="#" aria-label="Instagram">
         <FontAwesomeIcon icon={faInstagram} size={size} />
       </a>
     </li>
     <li className="ms-3">
-      <a className="link-light" href="#">
+      <a className="link-light" href="#" aria-label="Facebook">
         <FontAwesomeIcon icon={faFacebookF} size={size} />
       </a>
     </li>
     <li className="ms-3">
-      <a className="link-light" href="#">
+      <a className="link-light" href="#" aria-label="Google">
         <FontAwesomeIcon icon={faGoogle} size={size} />
       </a>
     </li>
     <li className="ms-3">
-      <a className="link-light" href="#">
+      <a className="link-light" href="#" aria-label="LinkedIn">
         <FontAwesomeIcon icon={faLinkedinIn} size={size} />
       </a>
     </li>
     <li className="ms-3">
-      <a className="link-light" href="#">
+      <a className="link-light" href="#" aria-label="GitHub">
         <FontAwesomeIcon icon={faGithub} size={size} />
       </a>
     </li>
@@ -44,14 +51,16 @@ const links = [
   { text: 'Pricing' },
   { text: 'FAQs' },
   { text: 'About' },
+  { text: 'Privacy Policy' },
+  { text: 'Terms of Service' },
 ];
 
 const Footer = () => (
   <footer className="bg-dark text-white py-4 w-100">
     <div className="container">
       <div className="row">
-        <div className="col-12 col-md-4 mb-4 mb-md-0">
-          <h3 className="text-danger">Links</h3>
+        <div className="col-12 col-md-3 mb-4 mb-md-0">
+          <h3> <span className="text-danger">Quick</span> Links</h3>
           <ul className="nav flex-column">
             {links.map((link, index) => (
               <li key={index} className="nav-item mb-2">
@@ -62,8 +71,21 @@ const Footer = () => (
             ))}
           </ul>
         </div>
-        <div className="col-12 col-md-4 mb-4 mb-md-0">
-          <h5>Subscribe to our newsletter</h5>
+        <div className="col-12 col-md-3 mb-4 mb-md-0">
+          <h5><span className="text-danger">Contact</span> Us</h5>
+          <p>
+            <strong>Address:</strong> 1234 Bank St, Suite 1000, Toronto, ON,
+            Canada
+          </p>
+          <p>
+            <strong>Phone:</strong> +1 234 567 890
+          </p>
+          <p>
+            <strong>Email:</strong> support@bank.com
+          </p>
+        </div>
+        <div className="col-12 col-md-3 mb-4 mb-md-0">
+          <h5><span className="text-danger">Subscribe</span> to our newsletter</h5>
           <p>Monthly digest of what's new and exciting from us.</p>
           <Form className="d-flex gap-2">
             <Form.Control
@@ -76,8 +98,8 @@ const Footer = () => (
             </Button>
           </Form>
         </div>
-        <div className="col-12 col-md-4">
-          <h5>Follow us</h5>
+        <div className="col-12 col-md-3">
+          <h5><span className="text-danger">Follow</span> us</h5>
           <ul className="list-unstyled d-flex">
             <SocialMediaLinks size="1x" />
           </ul>
@@ -85,11 +107,7 @@ const Footer = () => (
       </div>
       <div className="row text-center mt-4">
         <div className="col">
-          <p>&copy; 2021 Company, Inc. All rights reserved.</p>
-          <p>
-            &copy; <span className="text-danger fw-bold">CIBC</span> Bank{' '}
-            {new Date().getFullYear()}
-          </p>
+          <p>&copy; {new Date().getFullYear()} <span className="text-danger">CIBC</span> Bank. All rights reserved.</p>
         </div>
       </div>
     </div>

@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CIBC from './Img/CIBC-1-1400x640-transformed.jpeg';
-import Content from './Img/cibc-0224-ph-2-transformed.webp';
+import CIBC from './Img/cibc-0224-ph-2-transformed.webp';
+import Content from './Img/cq5dam.web.1280.1280.avif';
 import { Container, Row, Col, Card, Carousel, Button } from 'react-bootstrap';
+import RewardOffer from './RewardOffer';
+import CongratulationsPage from './CongratulationsPage';
 
 const HomePage = ({ balances, transactions }) => {
   const [hoveredBalance, setHoveredBalance] = useState(null);
@@ -59,7 +61,7 @@ const HomePage = ({ balances, transactions }) => {
               onMouseLeave={() => handleHover(null)}
             >
               <Card.Body>
-                <h5 className="card-title">Checking Balance</h5>
+                <h5 className="card-title"><span className="text-danger">Checking</span> Balance</h5>
                 <p className="card-text">${balances.checking.toFixed(2)}</p>
                 {hoveredBalance === 'checking' && (
                   <Button variant="danger" className="mt-2" onClick={() => handleClick('checking')}>View Checking Transactions</Button>
@@ -74,7 +76,7 @@ const HomePage = ({ balances, transactions }) => {
               onMouseLeave={() => handleHover(null)}
             >
               <Card.Body>
-                <h5 className="card-title">Savings Balance</h5>
+                <h5 className="card-title"><span className="text-danger">Savings</span> Balance</h5>
                 <p className="card-text">${balances.savings.toFixed(2)}</p>
                 {hoveredBalance === 'savings' && (
                   <Button variant="danger" className="mt-2" onClick={() => handleClick('savings')}>View Savings Transactions</Button>
@@ -89,7 +91,7 @@ const HomePage = ({ balances, transactions }) => {
               onMouseLeave={() => handleHover(null)}
             >
               <Card.Body>
-                <h5 className="card-title">Total Balance</h5>
+                <h5 className="card-title"><span className="text-danger">Total</span> Balance</h5>
                 <p className="card-text">${totalBalance.toFixed(2)}</p>
                 {hoveredBalance === 'total' && (
                   <Button variant="danger" className="mt-2" onClick={() => handleClick('total')}>View All Transactions</Button>
@@ -132,28 +134,31 @@ const HomePage = ({ balances, transactions }) => {
         </Container>
       )}
 
-<Container className="my-5">
-  <Row className="d-flex align-items-stretch">
-    <Col md={4} className="offset-md-1">
-      <Card className="p-4 bg-light shadow rounded d-flex flex-column justify-content-between h-100">
-        <div>
-          <h2>About CIBC Bank</h2>
-          <p>Here you can provide information about CIBC Bank.</p>
-          <h3>Our Services</h3>
-          <p>Here you can list the services provided by CIBC Bank.</p>
-        </div>
-        <div className="d-grid gap-2">
-          <Link to="/deposit" className="btn btn-danger btn-lg">Deposit</Link>
-          <Link to="/withdraw" className="btn btn-danger btn-lg">Withdraw</Link>
-          <Link to="/etransfer" className="btn btn-danger btn-lg">E-Transfer</Link>
-        </div>
-      </Card>
-    </Col>
-    <Col md={7}>
-      <img src={Content} alt="Welcome to CIBC Bank" className="img-fluid rounded h-100" />
-    </Col>
-  </Row>
-</Container>
+      <RewardOffer />
+      <CongratulationsPage/>
+
+      <Container className="my-5">
+        <Row className="d-flex align-items-stretch">
+          <Col md={4} className="offset-md-1">
+            <Card className="p-4 bg-light shadow rounded d-flex flex-column justify-content-between h-100">
+              <div>
+                <h2>About <span className="text-danger">CIBC</span> Bank</h2>
+                <p>Here you can provide information about CIBC Bank.</p>
+                <h3>Our Services</h3>
+                <p>Here you can list the services provided by CIBC Bank.</p>
+              </div>
+              <div className="d-grid gap-2">
+                <Link to="/deposit" className="btn btn-danger btn-lg">Deposit</Link>
+                <Link to="/withdraw" className="btn btn-danger btn-lg">Withdraw</Link>
+                <Link to="/etransfer" className="btn btn-danger btn-lg">E-Transfer</Link>
+              </div>
+            </Card>
+          </Col>
+          <Col md={7}>
+            <img src={Content} alt="Welcome to CIBC Bank" className="img-fluid rounded h-100" />
+          </Col>
+        </Row>
+      </Container>
 
     </div>
   );

@@ -1,0 +1,26 @@
+.custom-link {
+  position: relative;
+  transition: color 0.3s;
+}
+
+.custom-link:hover {
+  color: #dc3545; /* red */
+}
+
+.custom-link::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #dc3545; /* red */
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out;
+}
+
+.custom-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
