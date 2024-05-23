@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import bankLogo from './Img/CIBC_logo_2021.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Navbar = () => {
+const Navbar = ({ isAuthenticated, onLogout }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -25,11 +25,24 @@ const Navbar = () => {
               <Link className="nav-link" to="/withdraw" style={{ fontSize: '1.2rem' }}>Withdraw</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/etransfer" style={{ fontSize: '1.2rem' }}>E-Transfer</Link> {/* Added E-Transfer Link */}
+              <Link className="nav-link" to="/etransfer" style={{ fontSize: '1.2rem' }}>E-Transfer</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/login" style={{ fontSize: '1.2rem', color: 'red' }}>Login</Link>
-            </li>
+            {isAuthenticated ? (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/" style={{ fontSize: '1.2rem', color: '#c41f3e' }} onClick={onLogout}>Logout</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login" style={{ fontSize: '1.2rem', color: '#c41f3e' }}>Login</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/signup" style={{ fontSize: '1.2rem', color: '#c41f3e' }}>SignUp</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

@@ -3,7 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; 
 
-const contacts = ['Abhishek Dhiman', 'Sukhjeet Singh', 'Arpan Silwal', 'Nawaz Chowdhry', 'Surjeet Singh', 'Sejal Josan', 'Nabdeep Kaur', 'Jasdeep Kaur', 'Riya Mankotia'];
+const allowedAccountNumbers = {
+  checking: '783783',
+  savings: '971971',
+  creditCard: '21212',
+  investment: '38686'
+};
+
+const contacts = [
+  'Abhishek Dhiman', 'Sukhjeet Singh', 'Arpan Silwal', 
+  'Nawaz Chowdhry', 'Surjeet Singh', 'Sejal Josan', 
+  'Nabdeep Kaur', 'Jasdeep Kaur', 'Riya Mankotia'
+];
 
 const TransactionForm = ({ type, onSubmit }) => {
   const [accountNumber, setAccountNumber] = useState('');
@@ -26,8 +37,14 @@ const TransactionForm = ({ type, onSubmit }) => {
 
   const validateForm = () => {
     const errors = {};
-    if (!accountNumber.trim()) errors.accountNumber = 'Account number is required.';
-    if (!amount.trim() || isNaN(amount) || amount <= 0) errors.amount = 'Enter a valid amount.';
+    if (!accountNumber.trim()) {
+      errors.accountNumber = 'Account number is required.';
+    } else if (allowedAccountNumbers[accountType] !== accountNumber.trim()) {
+      errors.accountNumber = 'Incorrect account number for the selected account type.';
+    }
+    if (!amount.trim() || isNaN(amount) || amount <= 0) {
+      errors.amount = 'Enter a valid amount.';
+    }
     return errors;
   };
 
@@ -37,7 +54,7 @@ const TransactionForm = ({ type, onSubmit }) => {
       amount: parseFloat(amount.trim()),
       type: type,
       accountType: accountType,
-      contact: selectedContact,
+      contact: type === 'etransfer' ? selectedContact : undefined,
     };
     onSubmit(transactionData);
     setAccountNumber('');
@@ -96,6 +113,20 @@ const TransactionForm = ({ type, onSubmit }) => {
                 >
                   Savings
                 </button>
+                <button
+                  type="button"
+                  className={`btn ${accountType === 'creditCard' ? 'btn-danger' : 'btn-outline-danger'}`}
+                  onClick={() => setAccountType('creditCard')}
+                >
+                  Credit Card
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${accountType === 'investment' ? 'btn-danger' : 'btn-outline-danger'}`}
+                  onClick={() => setAccountType('investment')}
+                >
+                  Investment
+                </button>
               </div>
             </div>
           </div>
@@ -134,7 +165,7 @@ const TransactionForm = ({ type, onSubmit }) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Transaction</h5>
+              <h5 className="modal-title">Confirm {type === 'deposit' ? 'Deposit' : type === 'withdraw' ? 'Withdrawal' : 'Transfer'}</h5>
               <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">

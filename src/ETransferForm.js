@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+const allowedAccountNumbers = {
+  checking: '783783',
+  savings: '971971',
+  creditCard: '21212',
+  investment: '38686'
+};
+
 const ETransferForm = ({ contacts, onSubmit }) => {
   const [fromAccount, setFromAccount] = useState('checking');
   const [toContact, setToContact] = useState('');
@@ -52,7 +59,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="form-label fw-bold">From Account</label>
+            <label className="form-label fw-bold">Transfer From</label>
             <div className="d-flex justify-content-center">
               <div className="btn-group" role="group">
                 <button
@@ -69,11 +76,25 @@ const ETransferForm = ({ contacts, onSubmit }) => {
                 >
                   Savings
                 </button>
+                <button
+                  type="button"
+                  className={`btn ${fromAccount === 'creditCard' ? 'btn-danger' : 'btn-outline-danger'}`}
+                  onClick={() => setFromAccount('creditCard')}
+                >
+                  Credit Card
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${fromAccount === 'investment' ? 'btn-danger' : 'btn-outline-danger'}`}
+                  onClick={() => setFromAccount('investment')}
+                >
+                  Investment
+                </button>
               </div>
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="toContact" className="form-label fw-bold">To Contact</label>
+            <label htmlFor="toContact" className="form-label fw-bold">Recipient Contact</label>
             <select
               id="toContact"
               className={`form-select ${formErrors.toContact ? 'is-invalid' : ''}`}
@@ -89,7 +110,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
             {formErrors.toContact && <div className="invalid-feedback">{formErrors.toContact}</div>}
           </div>
           <div className="mb-4">
-            <label htmlFor="amount" className="form-label fw-bold">Amount</label>
+            <label htmlFor="amount" className="form-label fw-bold">Amount to Transfer ($)</label>
             <input
               type="number"
               id="amount"
@@ -101,9 +122,7 @@ const ETransferForm = ({ contacts, onSubmit }) => {
             {formErrors.amount && <div className="invalid-feedback">{formErrors.amount}</div>}
           </div>
           <div className="text-center">
-            <button type="submit" className="btn btn-danger btn-lg px-5">
-              Transfer
-            </button>
+            <button type="submit" className="btn btn-danger btn-lg px-5">Transfer Funds</button>
           </div>
         </form>
         <div className="text-center mt-3">

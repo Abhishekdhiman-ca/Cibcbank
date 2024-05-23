@@ -3,45 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import A from './Img/img1.webp';
 
-const Login = ({ onLogin }) => {
-  const [identifier, setIdentifier] = useState(''); // Changed from username to identifier
+const SignUp = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
-    // Define the hardcoded credentials
-    const validCredentials = [
-      { identifier: 'Abhishek@gmail.com', password: 'Abhi@123' },
-      { identifier: 'Abhibank@gmail.com', password: 'password123' }
-    ];
+    // Perform sign-up logic (can be API call to create user)
+    // Here you would typically send username, email, and password to your server
 
-    try {
-      // Simulating login process with a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Check if the identifier (username or email) and password match any valid credentials
-      const validUser = validCredentials.find(
-        cred => (cred.identifier === identifier || cred.email === identifier) && cred.password === password
-      );
-
-      if (validUser) {
-        // If login is successful, call the onLogin function if provided
-        if (onLogin) {
-          onLogin();
-        }
-        // Navigate to home page
-        navigate('/');
-      } else {
-        // If login fails, set error message
-        setError('Invalid username or password');
-      }
-    } catch (error) {
-      console.error('Login failed:', error.message);
-      setError('An error occurred during login');
-    }
+    // For demonstration purposes, just navigate to login page after sign-up
+    navigate('/login');
   };
 
   return (
@@ -51,7 +27,7 @@ const Login = ({ onLogin }) => {
           <div className="col-md-6">
             <img 
               src={A} 
-              alt="login form" 
+              alt="signup form" 
               className="img-fluid rounded-start w-100" 
             />
           </div>
@@ -64,17 +40,28 @@ const Login = ({ onLogin }) => {
                 </h1>
               </div>
               <h5 className="fw-normal my-4 pb-3" style={{ letterSpacing: '1px' }}>
-                Login into your account
+                SignUp your account
               </h5>
-              <form onSubmit={handleLogin}>
+              <form onSubmit={handleSignUp}>
                 <div className="mb-4">
-                  <label htmlFor="identifier" className="form-label">Username or Email</label>
+                  <label htmlFor="username" className="form-label">Username</label>
                   <input 
                     type="text" 
-                    id="identifier" 
+                    id="username" 
                     className="form-control form-control-lg"
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required 
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    className="form-control form-control-lg"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required 
                   />
                 </div>
@@ -94,12 +81,11 @@ const Login = ({ onLogin }) => {
                   type="submit" 
                   className="btn btn-dark btn-lg mb-4 px-5"
                 >
-                  Login
+                  Sign Up
                 </button>
               </form>
-              <a className="small text-muted" href="#!">Forgot password?</a>
               <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
-                Don't have an account? <a href="./Signup" style={{ color: '#393f81' }}>Register here</a>
+                Already have an account? <a href="/login" style={{ color: '#393f81' }}>Login here</a>
               </p>
               <div className="d-flex flex-row justify-content-start">
                 <a href="#!" className="small text-muted me-1">Terms of use.</a>
@@ -113,4 +99,4 @@ const Login = ({ onLogin }) => {
   );
 };
 
-export default Login;
+export default SignUp;

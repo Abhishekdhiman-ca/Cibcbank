@@ -1,18 +1,19 @@
-// HomePage.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CIBC from './Img/cibc-0224-ph-2-transformed.webp';
-import Content from './Img/cq5dam.web.1280.1280.avif';
 import { Container, Row, Col, Card, Carousel, Button } from 'react-bootstrap';
 import RewardOffer from './RewardOffer';
 import CongratulationsPage from './CongratulationsPage';
+import './App.css';
+import CIBC from './Img/cibc-0224-ph-2-transformed.webp';
+import Content from './Img/cq5dam.web.1280.1280.avif';
 
-const HomePage = ({ balances, transactions }) => {
+const HomePage = ({ balances, transactions, allowedAccountNumbers }) => {
   const [hoveredBalance, setHoveredBalance] = useState(null);
   const [clickedBalance, setClickedBalance] = useState(null);
-  const totalBalance = balances.checking + balances.savings;
+  const [showTransactions, setShowTransactions] = useState(false);
+  const totalBalance = Object.values(balances).reduce((acc, balance) => acc + balance, 0);
 
   const handleHover = (balanceType) => {
     setHoveredBalance(balanceType);
@@ -20,6 +21,7 @@ const HomePage = ({ balances, transactions }) => {
 
   const handleClick = (balanceType) => {
     setClickedBalance(balanceType);
+    setShowTransactions(true);
   };
 
   return (
@@ -32,7 +34,6 @@ const HomePage = ({ balances, transactions }) => {
             alt="Welcome to CIBC Bank"
             style={{ objectFit: "cover", maxHeight: "600px" }}
           />
-          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item style={{ maxHeight: "450px" }}>
           <img
@@ -41,7 +42,6 @@ const HomePage = ({ balances, transactions }) => {
             alt="Welcome to CIBC Bank"
             style={{ objectFit: "cover", maxHeight: "600px" }}
           />
-          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
       </Carousel>
 
@@ -54,36 +54,26 @@ const HomePage = ({ balances, transactions }) => {
 
       <Container className="my-5">
         <Row className="justify-content-center">
-          <Col md={4}>
-            <Card
-              className="shadow"
-              onMouseEnter={() => handleHover('checking')}
-              onMouseLeave={() => handleHover(null)}
-            >
-              <Card.Body>
-                <h5 className="card-title"><span className="text-danger">Checking</span> Balance</h5>
-                <p className="card-text">${balances.checking.toFixed(2)}</p>
-                {hoveredBalance === 'checking' && (
-                  <Button variant="danger" className="mt-2" onClick={() => handleClick('checking')}>View Checking Transactions</Button>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md={4}>
-            <Card
-              className="shadow"
-              onMouseEnter={() => handleHover('savings')}
-              onMouseLeave={() => handleHover(null)}
-            >
-              <Card.Body>
-                <h5 className="card-title"><span className="text-danger">Savings</span> Balance</h5>
-                <p className="card-text">${balances.savings.toFixed(2)}</p>
-                {hoveredBalance === 'savings' && (
-                  <Button variant="danger" className="mt-2" onClick={() => handleClick('savings')}>View Savings Transactions</Button>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
+          {Object.keys(balances).map((accountType) => (
+            <Col md={4} key={accountType}>
+              <Card
+                className="shadow"
+                onMouseEnter={() => handleHover(accountType)}
+                onMouseLeave={() => handleHover(null)}
+              >
+                <Card.Body>
+                  <h5 className="card-title">
+                    <span className="text-danger">{accountType.charAt(0).toUpperCase() + accountType.slice(1)}</span> 
+                    {" ("}{allowedAccountNumbers[accountType]}{")"} Balance
+                  </h5>
+                  <p className="card-text">${balances[accountType].toFixed(2)}</p>
+                  {hoveredBalance === accountType && (
+                    <Button variant="danger" className="mt-2" onClick={() => handleClick(accountType)}>View {accountType.charAt(0).toUpperCase() + accountType.slice(1)} Transactions</Button>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
           <Col md={4}>
             <Card
               className="shadow"
@@ -126,7 +116,7 @@ const HomePage = ({ balances, transactions }) => {
                     <td>{transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
                     <td>${transaction.amount.toFixed(2)}</td>
                     <td>{transaction.accountType.charAt(0).toUpperCase() + transaction.accountType.slice(1)}</td>
-                    <td>{transaction.accountNumber}</td>
+                    <td>{allowedAccountNumbers[transaction.accountType]}</td>
                   </tr>
                 ))}
             </tbody>
@@ -159,7 +149,6 @@ const HomePage = ({ balances, transactions }) => {
           </Col>
         </Row>
       </Container>
-
     </div>
   );
 };

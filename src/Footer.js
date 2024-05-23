@@ -60,7 +60,7 @@ const Footer = () => (
     <div className="container">
       <div className="row">
         <div className="col-12 col-md-3 mb-4 mb-md-0">
-          <h3> <span className="text-danger">Quick</span> Links</h3>
+          <h3> <span style={{ color: '#c41f3e' }}>Quick Links</span></h3>
           <ul className="nav flex-column">
             {links.map((link, index) => (
               <li key={index} className="nav-item mb-2">
@@ -72,7 +72,7 @@ const Footer = () => (
           </ul>
         </div>
         <div className="col-12 col-md-3 mb-4 mb-md-0">
-          <h5><span className="text-danger">Contact</span> Us</h5>
+          <h5><span style={{ color: '#c41f3e' }}>Contact Us</span></h5>
           <p>
             <strong>Address:</strong> 1234 Bank St, Suite 1000, Toronto, ON,
             Canada
@@ -85,7 +85,7 @@ const Footer = () => (
           </p>
         </div>
         <div className="col-12 col-md-3 mb-4 mb-md-0">
-          <h5><span className="text-danger">Subscribe</span> to our newsletter</h5>
+          <h5><span style={{ color: '#c41f3e' }}>Subscribe to our newsletter</span> </h5>
           <p>Monthly digest of what's new and exciting from us.</p>
           <Form className="d-flex gap-2">
             <Form.Control
@@ -99,7 +99,7 @@ const Footer = () => (
           </Form>
         </div>
         <div className="col-12 col-md-3">
-          <h5><span className="text-danger">Follow</span> us</h5>
+          <h5><span style={{ color: '#c41f3e' }}>Follow us</span></h5>
           <ul className="list-unstyled d-flex">
             <SocialMediaLinks size="1x" />
           </ul>
@@ -107,7 +107,7 @@ const Footer = () => (
       </div>
       <div className="row text-center mt-4">
         <div className="col">
-          <p>&copy; {new Date().getFullYear()} <span className="text-danger">CIBC</span> Bank. All rights reserved.</p>
+          <p> <span style={{ color: '#c41f3e' }}>&copy; {new Date().getFullYear()} CIBC Bank. All rights  reserved.</span></p>
         </div>
       </div>
     </div>
