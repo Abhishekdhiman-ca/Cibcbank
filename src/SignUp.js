@@ -9,7 +9,7 @@ const SignUp = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [lastAccountNumber, setLastAccountNumber] = useState(4711);
   const navigate = useNavigate();
 
@@ -78,17 +78,14 @@ const SignUp = () => {
       setLastName("");
       setEmail("");
       setPassword("");
-      setError("");
+      setMessage("Signup successful! Redirecting to login...");
 
-      // Show signup successful alert
-      setError("Signup successful");
       setTimeout(() => {
-        // Redirect to login page after 2 seconds
         navigate("/login");
       }, 2000);
     } catch (error) {
       console.error("Error signing up:", error);
-      setError("Error signing up. Please try again.");
+      setMessage("Error signing up. Please try again.");
     }
   };
 
@@ -170,9 +167,12 @@ const SignUp = () => {
                     required
                   />
                 </div>
-                {error && (
-                  <div className="alert alert-danger" role="alert">
-                    {error}
+                {message && (
+                  <div
+                    className={`alert ${message.includes("successful") ? "alert-success" : "alert-danger"}`}
+                    role="alert"
+                  >
+                    {message}
                   </div>
                 )}
                 <button

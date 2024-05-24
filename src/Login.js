@@ -6,7 +6,7 @@ import A from './Img/img1.webp';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
@@ -66,7 +66,7 @@ const Login = ({ onLogin }) => {
     if (user) {
       localStorage.setItem('accountNumber', user.About.AccountNumber);
       // Show login successful alert
-      setError('Login successful');
+      setMessage('Login successful! Redirecting to HomePage...');
       setTimeout(() => {
         // Redirect to dashboard page after 2 seconds
         navigate('/');
@@ -75,10 +75,9 @@ const Login = ({ onLogin }) => {
         onLogin();
       }
     } else {
-      setError('Invalid email or password');
+      setMessage('Invalid email or password');
     }
   };
-  
 
   return (
     <div className="container my-5">
@@ -125,7 +124,14 @@ const Login = ({ onLogin }) => {
                     required
                   />
                 </div>
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                {message && (
+                  <div
+                    className={`alert ${message.includes("successful") ? "alert-success" : "alert-danger"}`}
+                    role="alert"
+                  >
+                    {message}
+                  </div>
+                )}
                 <button type="submit" className="btn btn-dark btn-lg mb-4 px-5">
                   Login
                 </button>
