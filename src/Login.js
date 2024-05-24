@@ -1,59 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import A from './Img/img1.webp';
 
 const Login = ({ onLogin }) => {
-  const [identifier, setIdentifier] = useState(''); // Changed from username to identifier
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const url = 'https://json-storage-api.p.rapidapi.com/datalake';
+  const headers = {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': '737b5b8023msh5dc8759b04faf33p1be655jsn98f86fc2f298',
+    'X-RapidAPI-Host': 'json-storage-api.p.rapidapi.com',
+  };
 
-    // Define the hardcoded credentials
-    const validCredentials = [
-      { identifier: 'Abhishek@gmail.com', password: 'Abhi@123' },
-      { identifier: 'Abhibank@gmail.com', password: 'password123' }
-    ];
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
+  const loadUsers = async () => {
     try {
-      // Simulating login process with a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Check if the identifier (username or email) and password match any valid credentials
-      const validUser = validCredentials.find(
-        cred => (cred.identifier === identifier || cred.email === identifier) && cred.password === password
-      );
-
-      if (validUser) {
-        // If login is successful, call the onLogin function if provided
-        if (onLogin) {
-          onLogin();
-        }
-        // Navigate to home page
-        navigate('/');
-      } else {
-        // If login fails, set error message
-        setError('Invalid username or password');
-      }
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          '@context': [
+            'http://schema4i.org/Thing.jsonld',
+            'http://schema4i.org/Action.jsonld',
+            'http://schema4i.org/SearchAction.jsonld',
+          ],
+          '@type': 'SearchAction',
+          Object: {
+            '@context': [
+              'http://schema4i.org/Thing.jsonld',
+              'http://schema4i.org/Filter',
+              'http://schema4i.org/DataLakeItem',
+              'http://schema4i.org/UserAccount',
+            ],
+            '@type': 'Filter',
+            FilterItem: {
+              '@type': 'DataLakeItem',
+              Creator: {
+                '@type': 'UserAccount',
+                Identifier: 'USERID-4711',
+              },
+            },
+          },
+        }),
+      });
+      const data = await response.json();
+      setUsers(data.Result.ItemListElement.map((item) => item.Item));
     } catch (error) {
-      console.error('Login failed:', error.message);
-      setError('An error occurred during login');
+      console.error('Error loading users:', error);
     }
   };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const user = users.find(
+      (user) => user.About.Email === email && user.About.Password === password
+    );
+    if (user) {
+      localStorage.setItem('accountNumber', user.About.AccountNumber);
+      // Show login successful alert
+      setError('Login successful');
+      setTimeout(() => {
+        // Redirect to dashboard page after 2 seconds
+        navigate('/');
+      }, 2000);
+      if (onLogin) {
+        onLogin();
+      }
+    } else {
+      setError('Invalid email or password');
+    }
+  };
+  
 
   return (
     <div className="container my-5">
       <div className="card">
         <div className="row g-0">
           <div className="col-md-6">
-            <img 
-              src={A} 
-              alt="login form" 
-              className="img-fluid rounded-start w-100" 
-            />
+            <img src={A} alt="login form" className="img-fluid rounded-start w-100" />
           </div>
           <div className="col-md-6">
             <div className="card-body d-flex flex-column">
@@ -68,42 +100,52 @@ const Login = ({ onLogin }) => {
               </h5>
               <form onSubmit={handleLogin}>
                 <div className="mb-4">
-                  <label htmlFor="identifier" className="form-label">Username or Email</label>
-                  <input 
-                    type="text" 
-                    id="identifier" 
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
                     className="form-control form-control-lg"
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
-                    required 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="password" className="form-label">Password</label>
-                  <input 
-                    type="password" 
-                    id="password" 
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
                     className="form-control form-control-lg"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <button 
-                  type="submit" 
-                  className="btn btn-dark btn-lg mb-4 px-5"
-                >
+                <button type="submit" className="btn btn-dark btn-lg mb-4 px-5">
                   Login
                 </button>
               </form>
-              <a className="small text-muted" href="#!">Forgot password?</a>
+              <a href="#!" className="small text-muted">
+                Forgot password?
+              </a>
               <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
-                Don't have an account? <a href="./Signup" style={{ color: '#393f81' }}>Register here</a>
+                Don't have an account?{' '}
+                <a href="./Signup" style={{ color: '#393f81' }}>
+                  Register here
+                </a>
               </p>
               <div className="d-flex flex-row justify-content-start">
-                <a href="#!" className="small text-muted me-1">Terms of use.</a>
-                <a href="#!" className="small text-muted">Privacy policy</a>
+                <a href="#!" className="small text-muted me-1">
+                  Terms of use.
+                </a>
+                <a href="#!" className="small text-muted">
+                  Privacy policy
+                </a>
               </div>
             </div>
           </div>

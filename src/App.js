@@ -151,14 +151,15 @@ const App = () => {
       <div>
         <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <div className="container mt-4">
-          <Routes>
-            <Route path="/" element={<ProtectedRoute element={<HomePage balances={balances} transactions={transactions} allowedAccountNumbers={allowedAccountNumbers} />} />} />
-            <Route path="/deposit" element={<ProtectedRoute element={<TransactionForm type="deposit" onSubmit={handleTransaction} />} />} />
-            <Route path="/withdraw" element={<ProtectedRoute element={<TransactionForm type="withdraw" onSubmit={handleTransaction} />} />} />
-            <Route path="/etransfer" element={<ProtectedRoute element={<ETransferForm contacts={contacts} onSubmit={handleETransfer} />} />} />
-            <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
-            <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignUp />} />
-          </Routes>
+        <Routes>
+  <Route path="/" element={<ProtectedRoute element={<HomePage balances={balances} transactions={transactions} allowedAccountNumbers={allowedAccountNumbers} />} />} />
+  <Route path="/deposit" element={<ProtectedRoute element={<TransactionForm type="deposit" onSubmit={handleTransaction} />} />} />
+  <Route path="/withdraw" element={<ProtectedRoute element={<TransactionForm type="withdraw" onSubmit={handleTransaction} />} />} />
+  <Route path="/etransfer" element={<ProtectedRoute element={<ETransferForm contacts={contacts} onSubmit={handleETransfer} />} />} />
+  <Route path="/login" element={<Login onLogin={handleLogin} isAuthenticated={isAuthenticated} />} />
+  <Route path="/signup" element={<SignUp isAuthenticated={isAuthenticated} />} />
+</Routes>
+
         </div>
         <Footer />
       </div>
