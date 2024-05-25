@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import HomePage from './HomePage';
 import TransactionForm from './TransactionForm';
@@ -32,7 +32,16 @@ const App = () => {
   ];
 
   useEffect(() => {
+    const authState = localStorage.getItem('isAuthenticated');
+    if (authState) {
+      setIsAuthenticated(JSON.parse(authState));
+    }
     addSampleTransactions();
+
+    const lastVisitedRoute = localStorage.getItem('lastVisitedRoute');
+    if (lastVisitedRoute) {
+      window.history.replaceState(null, '', lastVisitedRoute);
+    }
   }, []);
 
   const addSampleTransactions = () => {
@@ -136,14 +145,27 @@ const App = () => {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    localStorage.setItem('isAuthenticated', true);
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('accountNumber'); // Clear account number on logout
   };
 
   const ProtectedRoute = ({ element }) => {
     return isAuthenticated ? element : <Navigate to="/login" />;
+  };
+
+  const RouteChangeHandler = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+      localStorage.setItem('lastVisitedRoute', location.pathname);
+    }, [location]);
+
+    return null;
   };
 
   return (
@@ -151,15 +173,15 @@ const App = () => {
       <div>
         <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <div className="container mt-4">
-        <Routes>
-  <Route path="/" element={<ProtectedRoute element={<HomePage balances={balances} transactions={transactions} allowedAccountNumbers={allowedAccountNumbers} />} />} />
-  <Route path="/deposit" element={<ProtectedRoute element={<TransactionForm type="deposit" onSubmit={handleTransaction} />} />} />
-  <Route path="/withdraw" element={<ProtectedRoute element={<TransactionForm type="withdraw" onSubmit={handleTransaction} />} />} />
-  <Route path="/etransfer" element={<ProtectedRoute element={<ETransferForm contacts={contacts} onSubmit={handleETransfer} />} />} />
-  <Route path="/login" element={<Login onLogin={handleLogin} isAuthenticated={isAuthenticated} />} />
-  <Route path="/signup" element={<SignUp isAuthenticated={isAuthenticated} />} />
-</Routes>
-
+          <RouteChangeHandler />
+          <Routes>
+            <Route path="/" element={<ProtectedRoute element={<HomePage balances={balances} transactions={transactions} allowedAccountNumbers={allowedAccountNumbers} />} />} />
+            <Route path="/deposit" element={<ProtectedRoute element={<TransactionForm type="deposit" onSubmit={handleTransaction} />} />} />
+            <Route path="/withdraw" element={<ProtectedRoute element={<TransactionForm type="withdraw" onSubmit={handleTransaction} />} />} />
+            <Route path="/etransfer" element={<ProtectedRoute element={<ETransferForm contacts={contacts} onSubmit={handleETransfer} />} />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} isAuthenticated={isAuthenticated} />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Routes>
         </div>
         <Footer />
       </div>

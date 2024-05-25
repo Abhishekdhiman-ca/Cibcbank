@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import A from './Img/img1.webp';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, isAuthenticated }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -18,8 +18,12 @@ const Login = ({ onLogin }) => {
   };
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    if (isAuthenticated) {
+      navigate('/');
+    } else {
+      loadUsers();
+    }
+  }, [isAuthenticated, navigate]);
 
   const loadUsers = async () => {
     try {
@@ -65,15 +69,14 @@ const Login = ({ onLogin }) => {
     );
     if (user) {
       localStorage.setItem('accountNumber', user.About.AccountNumber);
-      // Show login successful alert
+      localStorage.setItem('isAuthenticated', true);
       setMessage('Login successful! Redirecting to HomePage...');
       setTimeout(() => {
-        // Redirect to dashboard page after 2 seconds
+        if (onLogin) {
+          onLogin();
+        }
         navigate('/');
       }, 2000);
-      if (onLogin) {
-        onLogin();
-      }
     } else {
       setMessage('Invalid email or password');
     }

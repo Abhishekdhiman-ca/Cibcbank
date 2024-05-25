@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import A from "./Img/img1.webp";
-import { v4 as uuidv4 } from "uuid";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -10,7 +9,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [lastAccountNumber, setLastAccountNumber] = useState(4711);
   const navigate = useNavigate();
 
   const url = "https://json-storage-api.p.rapidapi.com/datalake";
@@ -20,25 +18,10 @@ const SignUp = () => {
     "X-RapidAPI-Host": "json-storage-api.p.rapidapi.com",
   };
 
-  useEffect(() => {
-    getLastAccountNumber();
-  }, []);
-
-  const getLastAccountNumber = async () => {
-    try {
-      const response = await fetch("https://your-api.com/last-account-number");
-      const data = await response.json();
-      setLastAccountNumber(data.lastAccountNumber);
-    } catch (error) {
-      console.error("Error fetching last account number:", error);
-    }
-  };
-
   const handleSignUp = async (e) => {
     e.preventDefault();
-    try {
-      const newAccountNumber = lastAccountNumber + 1;
 
+    try {
       const response = await fetch(url, {
         method: "POST",
         headers,
@@ -53,36 +36,31 @@ const SignUp = () => {
             "@context": [
               "http://schema4i.org/DataLakeItem.jsonld",
               "http://schema4i.org/UserAccount.jsonld",
-              "http://schema4i.org/OfferForPurchase.jsonld",
-              "http://schema4i.org/Offer.jsonld",
-              "http://schema4i.org/Organization.jsonld",
-              "http://schema4i.org/PostalAddress.jsonld",
             ],
             "@type": "DataLakeItem",
-            Name: firstName + " " + lastName,
+            Name: `${firstName} ${lastName}`,
             Creator: {
               "@type": "UserAccount",
               Identifier: "USERID-4711",
             },
             About: {
-              "@type": "Organization",
+              "@type": "UserAccount",
               Email: email,
               Password: password,
-              AccountNumber: newAccountNumber,
+              AccountNumber: Math.floor(Math.random() * 1000000), // Example account number generation
             },
           },
         }),
       });
-      await response.text();
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPassword("");
-      setMessage("Signup successful! Redirecting to login...");
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      if (response.ok) {
+        setMessage("Signup successful! Redirecting to login...");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        setMessage("Error signing up. Please try again.");
+      }
     } catch (error) {
       console.error("Error signing up:", error);
       setMessage("Error signing up. Please try again.");
