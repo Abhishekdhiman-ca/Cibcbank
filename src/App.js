@@ -18,10 +18,10 @@ const allowedAccountNumbers = {
 
 const App = () => {
   const [balances, setBalances] = useState({
-    checking: 128,
-    savings: 1322,
-    creditCard: 100,
-    investment: 100,
+    checking: 0,
+    savings: 0,
+    creditCard: 0,
+    investment: 0,
   });
   const [transactions, setTransactions] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,55 +36,12 @@ const App = () => {
     if (authState) {
       setIsAuthenticated(JSON.parse(authState));
     }
-    addSampleTransactions();
 
     const lastVisitedRoute = localStorage.getItem('lastVisitedRoute');
     if (lastVisitedRoute) {
       window.history.replaceState(null, '', lastVisitedRoute);
     }
   }, []);
-
-  const addSampleTransactions = () => {
-    const sampleTransactions = [
-      {
-        type: 'deposit',
-        accountNumber: '783783',
-        amount: 100,
-        accountType: 'checking',
-        timestamp: new Date().toLocaleString()
-      },
-      {
-        type: 'withdraw',
-        accountNumber: '971971',
-        amount: 50,
-        accountType: 'savings',
-        timestamp: new Date().toLocaleString()
-      },
-      {
-        type: 'deposit',
-        accountNumber: '21212',
-        amount: 7,
-        accountType: 'creditCard',
-        timestamp: new Date().toLocaleString()
-      },
-      {
-        type: 'withdraw',
-        accountNumber: '38686',
-        amount: 50,
-        accountType: 'investment',
-        timestamp: new Date().toLocaleString()
-      }
-    ];
-
-    setTransactions(prevTransactions => [...prevTransactions, ...sampleTransactions]);
-
-    setBalances({
-      checking: 228,
-      savings: 1272,
-      creditCard: 107,
-      investment: 50,
-    });
-  };
 
   const handleTransaction = ({ accountNumber, amount, type, accountType }) => {
     if (allowedAccountNumbers[accountType] !== accountNumber) {
