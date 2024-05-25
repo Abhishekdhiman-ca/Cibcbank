@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import A from "./Img/img1.webp";
@@ -9,6 +9,8 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [lastAccountNumber, setLastAccountNumber] = useState(1000);
   const navigate = useNavigate();
 
   const url = "https://json-storage-api.p.rapidapi.com/datalake";
@@ -18,10 +20,65 @@ const SignUp = () => {
     "X-RapidAPI-Host": "json-storage-api.p.rapidapi.com",
   };
 
+  useEffect(() => {
+    loadUsers();
+    getLastAccountNumber();
+  }, []);
+
+  const loadUsers = async () => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          "@context": [
+            "http://schema4i.org/Thing.jsonld",
+            "http://schema4i.org/Action.jsonld",
+            "http://schema4i.org/SearchAction.jsonld",
+          ],
+          "@type": "SearchAction",
+          Object: {
+            "@context": [
+              "http://schema4i.org/Thing.jsonld",
+              "http://schema4i.org/Filter",
+              "http://schema4i.org/DataLakeItem",
+              "http://schema4i.org/UserAccount",
+            ],
+            "@type": "Filter",
+            FilterItem: {
+              "@type": "DataLakeItem",
+              Creator: {
+                "@type": "UserAccount",
+                Identifier: "USERID-1000", // Modify if necessary
+              },
+            },
+          },
+        }),
+      });
+      const data = await response.json();
+      setRegisteredUsers(data.Result.ItemListElement.map((item) => item.Item));
+    } catch (error) {
+      console.error("Error loading users:", error);
+    }
+  };
+
+  const getLastAccountNumber = async () => {
+    try {
+      // Fetch the last account number from your data storage
+      // For now, let's assume you're fetching it from an API endpoint
+      const response = await fetch("https://your-api.com/last-account-number");
+      const data = await response.json();
+      setLastAccountNumber(data.lastAccountNumber); // Update the state with the fetched value
+    } catch (error) {
+      console.error("Error fetching last account number:", error);
+    }
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     try {
+      const newAccountNumber = lastAccountNumber + registeredUsers.length + 1;
       const response = await fetch(url, {
         method: "POST",
         headers,
@@ -41,13 +98,13 @@ const SignUp = () => {
             Name: `${firstName} ${lastName}`,
             Creator: {
               "@type": "UserAccount",
-              Identifier: "USERID-4711",
+              Identifier: "USERID-1000",
             },
             About: {
               "@type": "UserAccount",
               Email: email,
               Password: password,
-              AccountNumber: Math.floor(Math.random() * 1000000), // Example account number generation
+              AccountNumber: newAccountNumber,
             },
           },
         }),
@@ -58,12 +115,63 @@ const SignUp = () => {
         setTimeout(() => {
           navigate("/login");
         }, 2000);
+        // Reload users after signup to display updated list
+        loadUsers();
       } else {
         setMessage("Error signing up. Please try again.");
       }
     } catch (error) {
       console.error("Error signing up:", error);
       setMessage("Error signing up. Please try again.");
+    }
+  };
+
+  const handleClearUsers = async () => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          "@context": [
+            "http://schema4i.org/Thing.jsonld",
+            "http://schema4i.org/Action.jsonld",
+            "http://schema4i.org/DeleteAction.jsonld",
+          ],
+          "@type": "DeleteAction",
+          Object: {
+            "@context": [
+              "http://schema4i.org/Thing.jsonld",
+              "http://schema4i.org/Filter",
+              "http://schema4i.org/DataLakeItem",
+              "http://schema4i.org/UserAccount",
+            ],
+            "@type": "Filter",
+            FilterItem: {
+              "@type": "DataLakeItem",
+              Creator: {
+                "@type": "UserAccount",
+                Identifier: "USERID-1000",
+              },
+              About: {
+                "@type": "UserAccount",
+                // Add additional filtering criteria here if needed
+              },
+            },
+          },
+        }),
+      });
+
+      if (response.ok) {
+        setMessage("All registered users cleared successfully.");
+        setRegisteredUsers([]);
+      } else {
+        const errorData = await response.json();
+        console.error("Error clearing registered users:", errorData);
+        setMessage("Error clearing registered users. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error clearing users:", error);
+      setMessage("Error clearing registered users. Please try again.");
     }
   };
 
@@ -147,16 +255,17 @@ const SignUp = () => {
                 </div>
                 {message && (
                   <div
-                    className={`alert ${message.includes("successful") ? "alert-success" : "alert-danger"}`}
+                    className={`alert ${
+                      message.includes("successful")
+                        ? "alert-success"
+                        : "alert-danger"
+                    }`}
                     role="alert"
                   >
                     {message}
                   </div>
                 )}
-                <button
-                  type="submit"
-                  className="btn btn-dark btn-lg mb-4 px-5"
-                >
+                <button type="submit" className="btn btn-dark btn-lg mb-4 px-5">
                   Sign Up
                 </button>
               </form>
@@ -177,6 +286,24 @@ const SignUp = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* Display registered user credentials */}
+      <div
+        className="d-flex flex-column justify-content-center align-items-center my-5"
+        style={{ height: "auto" }}
+      >
+        <h2>Registered Users</h2>
+        <ul>
+          {registeredUsers.map((user, index) => (
+            <li key={index}>
+              Name: {user.Name}, Email: {user.About.Email}, Password:{" "}
+              {user.About.Password}, Account Number: {user.About.AccountNumber}
+            </li>
+          ))}
+        </ul>
+        <button onClick={handleClearUsers} className="btn btn-danger">
+          Clear All Users
+        </button>
       </div>
     </div>
   );

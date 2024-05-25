@@ -49,7 +49,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
               '@type': 'DataLakeItem',
               Creator: {
                 '@type': 'UserAccount',
-                Identifier: 'USERID-4711',
+                Identifier: 'USERID-1000',
               },
             },
           },
