@@ -18,6 +18,7 @@ const HomePage = ({ balances, transactions, allowedAccountNumbers }) => {
     investment: false,
     total: false
   });
+  const [currentAccountType, setCurrentAccountType] = useState(null);
 
   const totalBalance = Object.values(balances).reduce((acc, balance) => acc + balance, 0);
 
@@ -30,6 +31,7 @@ const HomePage = ({ balances, transactions, allowedAccountNumbers }) => {
       ...prevState,
       [balanceType]: !prevState[balanceType]
     }));
+    setCurrentAccountType(balanceType);
   };
 
   const toggleAllTransactions = () => {
@@ -37,6 +39,7 @@ const HomePage = ({ balances, transactions, allowedAccountNumbers }) => {
       ...prevState,
       total: !prevState.total
     }));
+    setCurrentAccountType('total');
   };
 
   return (
@@ -119,43 +122,11 @@ const HomePage = ({ balances, transactions, allowedAccountNumbers }) => {
         </Row>
       </Container>
 
-      {Object.keys(visibleTransactions).map((accountType) => (
-        accountType !== 'total' && visibleTransactions[accountType] && (
-          <Container className="my-5" key={accountType}>
-            <h3 className="mb-3">{`${accountType.charAt(0).toUpperCase() + accountType.slice(1)} Account Transactions`}:</h3>
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Account Type</th>
-                  <th>Account Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions
-                  .filter(transaction => transaction.accountType === accountType)
-                  .map((transaction, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{transaction.timestamp}</td>
-                      <td>{transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
-                      <td>${transaction.amount.toFixed(2)}</td>
-                      <td>{transaction.accountType.charAt(0).toUpperCase() + transaction.accountType.slice(1)}</td>
-                      <td>{allowedAccountNumbers[transaction.accountType]}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </Container>
-        )
-      ))}
-
-      {visibleTransactions.total && (
+      {Object.keys(visibleTransactions).some(accountType => visibleTransactions[accountType]) && (
         <Container className="my-5">
-          <h3 className="mb-3">All Transactions:</h3>
+          <h3 className="mb-3">
+            {currentAccountType === 'total' ? 'All Transactions' : `${currentAccountType.charAt(0).toUpperCase() + currentAccountType.slice(1)} Account Transactions`}:
+          </h3>
           <Table striped bordered hover responsive>
             <thead>
               <tr>
@@ -168,16 +139,29 @@ const HomePage = ({ balances, transactions, allowedAccountNumbers }) => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{transaction.timestamp}</td>
-                  <td>{transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
-                  <td>${transaction.amount.toFixed(2)}</td>
-                  <td>{transaction.accountType.charAt(0).toUpperCase() + transaction.accountType.slice(1)}</td>
-                  <td>{allowedAccountNumbers[transaction.accountType]}</td>
-                </tr>
-              ))}
+              {currentAccountType === 'total'
+                ? transactions.map((transaction, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{transaction.timestamp}</td>
+                      <td>{transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
+                      <td>${transaction.amount.toFixed(2)}</td>
+                      <td>{transaction.accountType.charAt(0).toUpperCase() + transaction.accountType.slice(1)}</td>
+                      <td>{allowedAccountNumbers[transaction.accountType]}</td>
+                    </tr>
+                  ))
+                : transactions
+                    .filter(transaction => transaction.accountType === currentAccountType)
+                    .map((transaction, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{transaction.timestamp}</td>
+                        <td>{transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
+                        <td>${transaction.amount.toFixed(2)}</td>
+                        <td>{transaction.accountType.charAt(0).toUpperCase() + transaction.accountType.slice(1)}</td>
+                        <td>{allowedAccountNumbers[transaction.accountType]}</td>
+                      </tr>
+                    ))}
             </tbody>
           </Table>
         </Container>
